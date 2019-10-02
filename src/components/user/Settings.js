@@ -1,0 +1,143 @@
+import React, { useContext, useState, useEffect } from 'react';
+import { StoreContext } from '../../context/store';
+import types from '../../context/types';
+import { Tabs, Button, Message, Typography, Input, Switch, message, Badge } from 'antd'
+import styled from 'styled-components';
+import AddressForm from './AddressForm';
+import api from '../../utils/api';
+import StripeConnectButton from './StripeConnectButton';
+
+const StyledSettingsContainer = styled.div`
+    margin: 0 auto;
+`;
+
+const FormField = styled.div`
+    display: flex;
+    align-items: center;
+    width: 60%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 50px 0;
+
+    > div {
+        width: 300px;
+    }
+
+    input {
+        max-width: 400px;
+    }
+`;
+
+const StyledButtonContainer = styled.div`
+    width: 60%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 50px;
+`;
+
+const Settings = () => {
+
+    const { state, dispatch } = useContext(StoreContext);
+    const [settings, setSettings] = useState(state);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setSettings({
+            ...state,
+            addresses_are_same: state.shipping_address.id === state.billing_address.id
+        });
+    }, [state])
+
+    const updateSettings = changes => {
+        setSettings({
+            ...settings,
+            ...changes
+        });
+    };
+
+    const saveSettings = () => {
+        setLoading(true);
+        api.settings.update(settings.id, settings)
+        .then(res => {
+            dispatch({
+                type: types.SET_APP_STATE,
+                payload: {
+                    ...state,
+                    ...res
+                }
+            });
+            message.success('Your settings have been updated')
+        })
+        .catch(err => {
+            console.log(err);
+            message.error('There was a problem saving your changes');
+        })
+        .finally(() => setLoading(false))
+    }
+
+    return (
+        <StyledSettingsContainer>
+            <Tabs defaultActiveKey="1">
+                <Tabs.TabPane tab="Account" key="1">
+                    <FormField>
+                        <div>
+                            <Typography.Title level={4}>Email Address</Typography.Title>
+                            <Typography.Text type="secondary">
+                                This is the email you use to login and receive notifications about orders
+                            </Typography.Text>
+                        </div>
+                        <Input value={settings.username} onChange={e => updateSettings({username: e.target.value})} />
+                    </FormField>
+                    <FormField>
+                        <div>
+                            <Typography.Title level={4}>Shipping Address</Typography.Title>
+                            <Typography.Text type="secondary">Your physical location</Typography.Text>
+                        </div>
+                        <AddressForm 
+                            {...settings.shipping_address} 
+                            handleChange={changes => updateSettings({shipping_address: {...settings.shipping_address, ...changes}})} 
+                        />
+                    </FormField>
+                    <FormField>
+                        <div>
+                            <Typography.Title level={4}>Billing Address</Typography.Title>
+                            <Typography.Text type="secondary">The address that's used on your invoices</Typography.Text>
+                        </div>
+                        <span>Same as shipping address <Switch checked={settings.addresses_are_same} onChange={val => updateSettings({addresses_are_same: val})} /></span>
+                        {!settings.addresses_are_same &&
+                            <AddressForm 
+                                {...settings.billing_address} 
+                                handleChange={changes => updateSettings({billing_address: {...settings.billing_address, ...changes}})} 
+                            />
+                        }
+                    </FormField>
+                </Tabs.TabPane>
+                {process.env.REACT_APP_TYPE === 'supplier'
+                    ? <Tabs.TabPane 
+                        tab={
+                            <span>Orders & Payments {!settings.has_payment_account && <Badge count={5} color="red" />}</span>
+                        } 
+                        key="2"
+                    >
+                        <FormField>
+                            <div>
+                                <Typography.Title level={4}>Card Payments</Typography.Title>
+                                <Typography.Text type="secondary">
+                                    Accept card payments for your orders deposited directly to your bank account by 
+                                    connecting to our integrated payments platform
+                                </Typography.Text>
+                            </div>
+                            <StripeConnectButton user={settings} />
+                        </FormField>
+                    </Tabs.TabPane>
+                    : <Tabs.TabPane tab="Establishment" key="3"></Tabs.TabPane>
+                }
+            </Tabs>
+            <StyledButtonContainer>
+                <Button type="primary" size="large" loading={loading} onClick={saveSettings}>Save</Button>
+            </StyledButtonContainer>
+        </StyledSettingsContainer>
+    )
+}
+
+export default Settings;
