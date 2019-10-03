@@ -46,7 +46,10 @@ const AddActivity = ({ orderId, refreshOrder }) => {
             }
 
             api.orderActivities.create(payload)
-            .then(() => refreshOrder())
+            .then(() => {
+                refreshOrder();
+                setValue('');
+            })
             .catch(err => console.log(err))
             .finally(() => setLoading(false));
         }

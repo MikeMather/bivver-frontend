@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { StoreContext } from '../../context/store';
 import types from '../../context/types';
-import { Tabs, Button, Message, Typography, Input, Switch, message, Badge } from 'antd'
+import { Tabs, Button, Message, Typography, Input, InputNumber, Switch, message, Badge, Select } from 'antd'
 import styled from 'styled-components';
 import AddressForm from './AddressForm';
 import api from '../../utils/api';
@@ -129,6 +129,34 @@ const Settings = () => {
                             </div>
                             <StripeConnectButton user={settings} />
                         </FormField>
+                        <FormField>
+                            <div>
+                                <Typography.Title level={4}>Keg Deposit Price</Typography.Title>
+                                <Typography.Text type="secondary">Enter a value to include keg deposits on your invoices</Typography.Text>
+                            </div>
+                            <InputNumber
+                                style={{width: 90}}
+                                min={0} 
+                                formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                                value={settings.supplier.keg_deposit_price} 
+                                onChange={val => updateSettings({supplier: {...settings.supplier, keg_deposit_price: val}})}
+                            />
+                        </FormField>
+                        <FormField>
+                        <div>
+                            <Typography.Title level={4}>Payment Term</Typography.Title>
+                            <Typography.Text type="secondary">Enter the number of days to allow before unpaid orders are flagged as overdue</Typography.Text>
+                        </div>
+                        <Select 
+                            style={{width: 110}}
+                            onChange={val => updateSettings({supplier: {...settings.supplier, default_payment_term: val}})}
+                        >
+                            <Select.Option value="0">0</Select.Option>
+                            <Select.Option value="30">30</Select.Option>
+                            <Select.Option value="60">60</Select.Option>
+                        </Select>
+                    </FormField>
                     </Tabs.TabPane>
                     : <Tabs.TabPane tab="Establishment" key="3"></Tabs.TabPane>
                 }

@@ -144,7 +144,7 @@ const ViewOrder = ({ match, history }) => {
             <StyledActionsContainer>
                 {userType === 'supplier'
                     ? <SupplierOrderActions order={order} type="primary" refreshOrder={fetchdata} />
-                    : <ClientOrderActions order={order} type="primary" />
+                    : <ClientOrderActions order={order} type="primary" refreshOrder={fetchdata} />
                 }
             </StyledActionsContainer>
             <div style={{display: 'flex', width: '100%', marginTop: 50}}>

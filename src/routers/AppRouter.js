@@ -19,6 +19,7 @@ import ViewOrder from '../components/order/ViewOrder';
 import SetupAccountBanner from '../components/supplier/SetupAccountBanner';
 import Settings from '../components/user/Settings';
 import StripeConnect from '../components/user/StripeConnect';
+import OrderHistory from '../components/order/OrderHistory';
 
 const SupplierRouter = auth => (
     <Switch>
@@ -55,6 +56,7 @@ const LocationRouter = auth => (
                 <Route exact path="/orders" component={ClientOrders} />
                 <Route exact path="/settings" component={Settings} />
                 <Route exact path="/orders/:orderId" component={ViewOrder} />
+                <Route exact path="/order-history" component={OrderHistory} />
                 <Route exact path="/logout" component={() => <Logout {...auth} />} />
             </React.Fragment>
             : <React.Fragment>

@@ -4,7 +4,7 @@ import LoginForm from './LoginForm';
 import RegisterClient from './RegisterClient';
 import { Modal, Menu } from 'antd';
 
-const LoginSignUpModal = ({ callback }) => {
+const LoginSignUpModal = ({ callback, handleCancel }) => {
 
     const [currentTab, setCurrentTab] = useState('login')
     const { actions } = useContext(StoreContext);
@@ -18,6 +18,7 @@ const LoginSignUpModal = ({ callback }) => {
             bodyStyle={{height: '90vh', overflowY: 'auto'}}
             width="auto"
             maskClosable
+            onCancel={handleCancel}
         >
             <Menu
                 onClick={e => setCurrentTab(e.key)}

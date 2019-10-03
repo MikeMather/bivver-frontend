@@ -46,9 +46,9 @@ export const formatChartData = (startDate, endDate, orders) => {
 
     const deliveredOrderDates = orders.filter(order => 
         ORDER_STATES.delivered_states.includes(order.state)
-    ).map(order => moment(order.updated_at).format('YYYY-MM-DD'));
+    ).map(order => moment(order.delivered_at).format('YYYY-MM-DD'));
 
-    const receivedOrderDates = orders.map(order => moment(order.created_at).format('YYYY-MM-DD'));
+    const receivedOrderDates = orders.map(order => moment(order.submitted_at).format('YYYY-MM-DD'));
 
     for (let i = 0; i < days; i++) {
         const pointDate = searchDate.add(1, 'days').format('YYYY-MM-DD');
@@ -67,8 +67,9 @@ export const formatOrdersTableData = orders => {
         id: order.id,
         status: order.state,
         client: order.client.name,
-        submitted: moment(order.submitted_at).format('LL'),
-        amount_due: currencyFormat(order.amount_due/100),
+        supplier: order.supplier.name,
+        submitted: order.submitted_at ? moment(order.submitted_at).format('LL') : '',
+        amount_due: order.amount_due ? currencyFormat(order.amount_due/100) : '',
         payment_status: getPaymentStatus(order.state, order.payment_due_date),
         order: order
     }));

@@ -3,6 +3,7 @@ import { Dropdown, Menu, Icon, Button, message } from 'antd';
 import api from '../../utils/api';
 import DeclineOrderModal from '../supplier/DeclineOrderModal'
 import CompleteDeliveryModal from '../supplier/CompleteDeliveryModal';
+import { downloadPdf } from './helper';
 
 
 const SupplierOrderActions = ({ order, type, refreshOrder }) => {
@@ -58,6 +59,11 @@ const SupplierOrderActions = ({ order, type, refreshOrder }) => {
             .finally(() => setLoading(false));
     };
 
+    const downloadInvoice = () => {
+        setLoading(true);
+        downloadPdf(order.id).finally(() => setLoading(false));
+    };
+
     const menu = (
         <Menu>
             <Menu.Item key="0" onClick={handleApprove} disabled={disableTransition}>
@@ -86,7 +92,11 @@ const SupplierOrderActions = ({ order, type, refreshOrder }) => {
                 <Icon type="carry-out"/>
                 Mark as delivered
             </Menu.Item>
-            <Menu.Item key="5" disabled={!disableTransition}>
+            <Menu.Item 
+                key="5" 
+                disabled={!(order.state === 'delivered_paid' || order.state === 'delivered_pending_payment')} 
+                onClick={downloadInvoice}
+            >
                 <Icon type="file-pdf" />
                 Download PDF
             </Menu.Item>

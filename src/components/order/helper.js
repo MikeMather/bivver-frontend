@@ -48,3 +48,8 @@ export const submitOrder = order => {
     })
     .then(updatedOrder => api.orders.transition(updatedOrder.id, transition));
 }
+
+export const downloadPdf = orderId => {
+    return api.invoicePdfs.getOne(orderId)
+        .then(({ url }) => window.open(url, '_blank'));
+}

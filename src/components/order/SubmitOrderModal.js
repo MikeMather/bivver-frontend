@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { ORDER_STATES } from '../../utils/constants';
-import { Typography, Modal, Select, Switch, InputNumber, Input, Button, Spin, message } from 'antd';
+import { Typography, Modal, Select, Switch, InputNumber, Input, Button, Spin, message, Alert } from 'antd';
 import { StoreContext } from '../../context/store';
 import styled from 'styled-components';
 import AddressForm from '../core/AddressForm';
@@ -9,6 +9,7 @@ import { injectStripe, CardElement } from 'react-stripe-elements';
 import moment from 'moment';
 import { submitOrder } from './helper';
 import api from '../../utils/api';
+import CardInput from './CardInput';
 
 const { Title, Text } = Typography;
 
@@ -24,37 +25,17 @@ export const FormField = styled.div`
     }
 `;
 
-const StyledCardContainer = styled.div`
-    border: 1px solid #d9d9d9;
-    border-radius: 3px;
-    padding: 10px;
-    margin-bottom: 10px;
-`;
 
-const cardInputStyle = {
-    base: {
-        fontSize: '16px',
-        color: '#424770',
-        fontFamily: 'Open Sans, sans-serif',
-        letterSpacing: '0.025em',
-        '::placeholder': {
-            color: '#aab7c4',
-        },
-    },
-    invalid: {
-        color: '#c23d4b',
-    },
-}
 
-const SectionHeader = ({ title }) => <Title level={4} style={{marginBottom: '15px', marginTop: '20px'}}>{title}</Title>;
+export const SectionHeader = ({ title }) => <Title level={4} style={{marginBottom: '15px', marginTop: '20px'}}>{title}</Title>;
 
 const SubmitOrderModal = ({ order, stripe, onCancel }) => {
 
-    const [paymentMethod, setPaymentMethod] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState(order.payment_method);
     const [activityMessage, setActivityMessage] = useState('');
-    const [deferred, setDeffered] = useState(false);
-    const [paymentSent, setPaymentSent] = useState(false);
-    const [kegReturns, setKegReturns] = useState(0);
+    const [deferred, setDeffered] = useState(order.payment_deferred);
+    const [paymentSent, setPaymentSent] = useState(order.payment_deferred);
+    const [kegReturns, setKegReturns] = useState(order.keg_returns);
     const [loading, setLoading] = useState(false);
     const [orderSummary, setOrderSummary] = useState({});
     const paymentDueDate = useMemo(() => moment().add(order.supplier.default_payment_term, 'days').format('YYYY-MM-DD'), [order]);
@@ -88,6 +69,7 @@ const SubmitOrderModal = ({ order, stripe, onCancel }) => {
         .finally(() => {
             setLoading(false);
             actions.fetchAppState().then(() => {
+                message.success('Order submitted');
                 onCancel();
             });
         });
@@ -100,7 +82,7 @@ const SubmitOrderModal = ({ order, stripe, onCancel }) => {
             amount: orderSummary.total,
             order: order.id,
             payment_method: paymentMethod,
-            deferred: deferred
+            deferred: paymentMethod === 'card' ? deferred : !paymentSent
         };
         if (!state.has_payment_account && paymentMethod === 'card' && !deferred) {
             const { token } = await stripe.createToken();
@@ -124,7 +106,7 @@ const SubmitOrderModal = ({ order, stripe, onCancel }) => {
                 {!order.supplier.accepts_card_payments && <Text type="secondary">This supplier does not accept card payments</Text>}
                 <FormField>
                     <label>Payment Method</label>
-                    <Select style={{width: 150}} onChange={val => setPaymentMethod(val)}>
+                    <Select style={{width: 150}} onChange={val => setPaymentMethod(val)} defaultValue={paymentMethod}>
                         {order.supplier.accepts_card_payments && <Select.Option key={0} value="card">Card</Select.Option>}
                         <Select.Option key={1} value="cheque">Cheque</Select.Option>
                         <Select.Option key={2} value="e-transfer">E-transfer</Select.Option>
@@ -155,13 +137,10 @@ const SubmitOrderModal = ({ order, stripe, onCancel }) => {
                 <OrderSummary order={{...order, keg_returns: kegReturns}} updateParentSummary={summary => setOrderSummary(summary)} />
 
                 {(!deferred && paymentMethod === 'card') &&
-                    <div style={{marginBottom: 25}}>
-                        <SectionHeader title="Card Payment" />
-                        <StyledCardContainer>
-                            <CardElement style={cardInputStyle} />
-                        </StyledCardContainer>
-                        <Text type="secondary">Your payment is only charged once the supplier delivers your order</Text>
-                    </div>
+                    (state.has_payment_account
+                        ? <Alert type="info" message="You're already set up for card payments. Click submit to process" />
+                        : <CardInput />
+                    )
                 }
                 <Text type="warning" strong>Payment due by {paymentDueDate}</Text>
                 <Button 

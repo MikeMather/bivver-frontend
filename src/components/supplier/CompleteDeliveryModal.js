@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import SignatureCanvas from 'react-signature-canvas';
 import moment from 'moment';
-import { Modal, InputNumber, message, Typography } from 'antd';
+import { Modal, InputNumber, message, Typography, Spin } from 'antd';
 import styled from 'styled-components';
 
 const StyledCanvas = styled.div`
@@ -42,23 +42,25 @@ const CompleteDeliveryModal = ({ handleSubmit, handleCancel, order }) => {
             onCancel={handleCancel}
             visible
         >
-            <Typography.Title level={4}>Keg Returns</Typography.Title>
-            <Typography.Text>Kegs being returned by the client:</Typography.Text>
-            <InputNumber
-                style={{marginLeft: 20, marginBottom: 20}}
-                min={0} 
-                value={kegs} 
-                onChange={value => handleKegChange(value)}
-                onClick={e => e.target.select()}
-            />
-            <Typography.Title level={4}>Signature</Typography.Title>
-            <Typography.Text>Use the pad below to get confirmation of the order</Typography.Text>
-            <StyledCanvas>
-                <SignatureCanvas 
-                    ref={signaturePad}
-                    canvasProps={{width: 350, height: 150, className: 'signature-canvas'}} 
+            <Spin spinning={loading}>
+                <Typography.Title level={4}>Keg Returns</Typography.Title>
+                <Typography.Text>Kegs being returned by the client:</Typography.Text>
+                <InputNumber
+                    style={{marginLeft: 20, marginBottom: 20}}
+                    min={0} 
+                    value={kegs} 
+                    onChange={value => handleKegChange(value)}
+                    onClick={e => e.target.select()}
                 />
-            </StyledCanvas>
+                <Typography.Title level={4}>Signature</Typography.Title>
+                <Typography.Text>Use the pad below to get confirmation of the order</Typography.Text>
+                <StyledCanvas>
+                    <SignatureCanvas 
+                        ref={signaturePad}
+                        canvasProps={{width: 350, height: 150, className: 'signature-canvas'}} 
+                    />
+                </StyledCanvas>
+            </Spin>
         </Modal>
     );
 };

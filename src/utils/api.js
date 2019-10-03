@@ -20,7 +20,8 @@ const urls = {
     paymentAccounts        : 'user/payment-account/',
     orderActivities        : 'order/order-activities/',
     markActivitiesSeen     : 'order/activities-seen/',
-    payments               : 'order/payments/'
+    payments               : 'order/payments/',
+    invoicePdfs            : 'order/invoices/'
 };
 
 let api = {};

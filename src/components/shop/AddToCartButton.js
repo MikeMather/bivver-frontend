@@ -42,7 +42,7 @@ const AddToCartButton = ({ item }) => {
     return (
         <React.Fragment>
             {showLoginModal &&
-                <LoginSignUpModal callback={handleLogin} />
+                <LoginSignUpModal callback={handleLogin} handleCancel={() => setShowLoginModal(false)} />
             }
             {existsInCart
                 ? <Tooltip title="Already added to your current order">

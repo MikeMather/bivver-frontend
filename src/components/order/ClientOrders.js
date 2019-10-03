@@ -46,11 +46,12 @@ const ClientOrders = () => {
     const [orders, setOrders] = useState(state.client.orders);
 
     useEffect(() => {
+        const newOrders = state.client.orders.sort((a, b) => moment(b.updated_at).diff(moment(a.updated_at)))
         if (filter) {
-            setOrders(state.client.orders.filter(order => order.state === filter));
+            setOrders(newOrders.filter(order => order.state === filter));
         }
         else {
-            setOrders(state.client.orders);
+            setOrders(newOrders);
         }
     }, [state, filter])
 
@@ -70,7 +71,7 @@ const ClientOrders = () => {
                     <List.Item
                         actions={[
                             <Link to={`/orders/${order.id}`}>View</Link>,
-                            <ClientOrderActions />
+                            <ClientOrderActions order={order} />
                         ]}
                     >
                         <List.Item.Meta

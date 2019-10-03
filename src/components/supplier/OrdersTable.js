@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import api from '../../utils/api';
 import { Table, Tag, Spin, Typography, Divider, Menu, Dropdown } from 'antd';
 import { formatOrdersTableData } from './helper.js';
@@ -6,6 +6,7 @@ import { ORDER_STATES } from '../../utils/constants';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import SupplierOrderActions from '../order/SupplierOrderActions';
+import ClientOrderActions from '../order/ClientOrderActions';
 
 const { Column } = Table;
 
@@ -17,6 +18,14 @@ const OrdersTable = ({ orders, refreshOrders }) => {
 
     const [data, setData] = useState(orders);
     const [loading, setLoading] = useState(true);
+    const isSupplier = process.env.REACT_APP_TYPE === 'supplier';
+
+    const tags = useMemo(() => {
+        if (isSupplier) {
+            return ORDER_STATES.supplier
+        }
+        return ORDER_STATES.client
+    }, [])
 
     useEffect(() => {
         setLoading(true);
@@ -39,14 +48,14 @@ const OrdersTable = ({ orders, refreshOrders }) => {
                         title="Status"
                         dataIndex="status"
                         key="statuses"
-                        render={status => <Tag color={ORDER_STATES.supplier[status].tagColor}>{ORDER_STATES.supplier[status].title}</Tag>}
+                        render={status => <Tag color={tags[status].tagColor}>{tags[status].title}</Tag>}
                         filters={stateFilters}
                         onFilter={(value, record) => value.includes(record.status)}
                     />
                     <Column
-                        title="Client"
+                        title={isSupplier ? 'Client' : 'Supplier'}
                         key="client"
-                        dataIndex="client"
+                        dataIndex={isSupplier ? 'client' : 'supplier'}
                     />
                     <Column
                         title="Submitted"
@@ -73,7 +82,10 @@ const OrdersTable = ({ orders, refreshOrders }) => {
                             <span>
                                 <Link to={`/orders/${record.id}`}>View</Link>
                                 <Divider type="vertical" />
-                                <SupplierOrderActions refreshOrder={refreshOrders} order={record.order} />
+                                {isSupplier
+                                    ? <SupplierOrderActions refreshOrder={refreshOrders} order={record.order} />
+                                    : <ClientOrderActions refreshOrder={refreshOrders} order={record.order} />
+                                }
                             </span>
                         )}
                     />

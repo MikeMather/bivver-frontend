@@ -25,7 +25,7 @@ const Item = ({ item, refreshItems }) => {
 
     const handleUpdateDisabled = value => {
         setEnabled(value);
-        api.items.update(item.id, {...item, disabled: value});
+        api.items.update(item.id, {...item, disabled: !value});
     };
 
     return (

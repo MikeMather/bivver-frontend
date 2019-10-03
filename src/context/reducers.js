@@ -1,4 +1,5 @@
 import types from './types';
+import { deleteOrder } from '../components/order/helper';
 
 const initialState = {
     authenticated: false,
@@ -21,7 +22,7 @@ const reducer = (state = initialState, action) => {
                     ...action.payload,
                     client: {
                         ...action.payload.client,
-                        active_orders: action.payload.client.orders.filter(order => !order.submitted_at)
+                        active_orders: action.payload.client.orders.filter(order => order.state === 'draft' || order.state === 'pending_client_approval')
                     }
                 }
             }
