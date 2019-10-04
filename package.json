@@ -23,7 +23,10 @@
   "scripts": {
     "start-supplier": "REACT_APP_TYPE=supplier react-app-rewired start",
     "start-client": "REAT_APP_TYPE=client react-app-rewired start",
-    "build": "react-app-rewired build",
+    "build-supplier-staging": "NODE_ENV=staging REACT_APP_TYPE=supplier react-app-rewired build",
+    "build-client-staging": "NODE_ENV=staging REAT_APP_TYPE=client react-app-rewired build",
+    "build-supplier-production": "NODE_ENV=production REACT_APP_TYPE=supplier react-app-rewired build",
+    "build-client-production": "NODE_ENV=production REACT_APP_TYPE=supplier react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject"
   },
