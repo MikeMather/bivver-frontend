@@ -34,11 +34,15 @@ const StyledMenu = styled.div`
 `;
 
 const StyledLoginButton = styled.div`
-    width: 140px;
+    width: 300px;
     height: 100%;
     color: white;
     display: flex;
     justify-content: space-evenly;
+
+    a:first-of-type {
+        margin-right: 20px;
+    }
 `;
 
 const SettingsMenu = (
@@ -63,7 +67,7 @@ const TopPanel = ({ authenticated, account_type }) => (
                     <React.Fragment>
                         <Link to="/">Orders</Link>
                         <Link to="/inventory">Inventory</Link>
-                        <Link to="/clients">Clients</Link>
+                        {/** <Link to="/clients">Clients</Link>*/}
                     </React.Fragment>
                 )
                 : (authenticated
@@ -95,6 +99,7 @@ const TopPanel = ({ authenticated, account_type }) => (
                     </Dropdown>
                 </React.Fragment>
             : <StyledLoginButton>
+                <Link to="/register/supplier"><Button ghost>Sell on Bivver</Button></Link>
                 <Link to="/register">Sign Up</Link>
                 <span> / </span>
                 <Link to="/login">Login</Link>

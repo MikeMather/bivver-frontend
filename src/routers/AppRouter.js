@@ -37,7 +37,7 @@ const SupplierRouter = auth => (
             </React.Fragment>
             : <React.Fragment>
                 <Route path="/(login|)" component={() => <Login {...auth} />} />
-                <Route path="/register" component={() => <RegisterSupplier {...auth} />} />
+                <Route path="/register/supplier" component={() => <RegisterSupplier {...auth} />} />
             </React.Fragment>
         }
     </Switch>
@@ -60,7 +60,8 @@ const LocationRouter = auth => (
                 <Route exact path="/logout" component={() => <Logout {...auth} />} />
             </React.Fragment>
             : <React.Fragment>
-                <Route path="/register" component={() => <RegisterClient {...auth} />} />
+                <Route exact path="/register" component={() => <RegisterClient {...auth} />} />
+                <Route exact path="/register/supplier" component={() => <RegisterSupplier {...auth} />} />
             </React.Fragment>
         }
     </Switch>
