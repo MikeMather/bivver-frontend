@@ -36,11 +36,10 @@ const ViewOrder = ({ match, history }) => {
     const [selectedTab, setSelectedTab] = useState('item-list');
     const { state, actions } = useContext(StoreContext);
     const [editing, setEditing] = useState(true);
-    const userType = process.env.REACT_APP_TYPE;
     const [signatureUrl, setSignatureUrl] = useState('');
 
     const tags = useMemo(() => {
-        if (userType === 'supplier') {
+        if (state.account_type === 'supplier') {
             return ORDER_STATES.supplier
         }
         return ORDER_STATES.client
@@ -48,7 +47,7 @@ const ViewOrder = ({ match, history }) => {
 
     const unseenActivities = useMemo(() => {
         return order.activities.reduce((total, activity) => {
-            if (userType === 'supplier') {
+            if (state.account_type === 'supplier') {
                 return total + !activity.supplier_seen;
             }
             return total + !activity.client_seen;
@@ -92,7 +91,7 @@ const ViewOrder = ({ match, history }) => {
 
     const links = () => (
         <Breadcrumb>
-            {userType === 'supplier'
+            {state.account_type === 'supplier'
                 ? <React.Fragment>
                     <Breadcrumb.Item>
                         <Link to={`/`}>Orders</Link>
@@ -111,7 +110,7 @@ const ViewOrder = ({ match, history }) => {
 
     return (
         <div>
-            {userType === 'supplier'
+            {state.account_type === 'supplier'
                 ? <StoreBanner {...order.client} Breadcrumbs={links} />
                 : <StoreBanner {...order.supplier} Breadcrumbs={links} />
             }
@@ -142,7 +141,7 @@ const ViewOrder = ({ match, history }) => {
                 }
             </Descriptions>
             <StyledActionsContainer>
-                {userType === 'supplier'
+                {state.account_type === 'supplier'
                     ? <SupplierOrderActions order={order} type="primary" refreshOrder={fetchdata} />
                     : <ClientOrderActions order={order} type="primary" refreshOrder={fetchdata} />
                 }

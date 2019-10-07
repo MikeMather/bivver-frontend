@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import api from '../../utils/api';
-import { Table, Tag, Spin, Typography, Divider, Menu, Dropdown } from 'antd';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
+import { Table, Tag, Spin, Divider } from 'antd';
 import { formatOrdersTableData } from './helper.js';
 import { ORDER_STATES } from '../../utils/constants';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import SupplierOrderActions from '../order/SupplierOrderActions';
 import ClientOrderActions from '../order/ClientOrderActions';
+import { StoreContext } from '../../context/store';
 
 const { Column } = Table;
 
@@ -18,7 +18,8 @@ const OrdersTable = ({ orders, refreshOrders }) => {
 
     const [data, setData] = useState(orders);
     const [loading, setLoading] = useState(true);
-    const isSupplier = process.env.REACT_APP_TYPE === 'supplier';
+    const { state } = useContext(StoreContext);
+    const isSupplier = state.account_type === 'supplier';
 
     const tags = useMemo(() => {
         if (isSupplier) {

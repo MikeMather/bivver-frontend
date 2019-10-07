@@ -1,5 +1,4 @@
 import types from './types';
-import { deleteOrder } from '../components/order/helper';
 
 const initialState = {
     authenticated: false,
@@ -10,7 +9,8 @@ const initialState = {
     client: {
         orders: [],
         active_orders: []
-    }
+    },
+    account_type: 'client'
 };
 
 const reducer = (state = initialState, action) => {

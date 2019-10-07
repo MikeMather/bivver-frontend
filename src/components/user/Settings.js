@@ -112,7 +112,7 @@ const Settings = () => {
                         }
                     </FormField>
                 </Tabs.TabPane>
-                {process.env.REACT_APP_TYPE === 'supplier'
+                {state.account_type === 'supplier'
                     ? <Tabs.TabPane 
                         tab={
                             <span>Orders & Payments {!settings.has_payment_account && <Badge count={5} color="red" />}</span>

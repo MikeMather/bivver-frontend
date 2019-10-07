@@ -48,7 +48,7 @@ const SettingsMenu = (
     </Menu>
 );
 
-const TopPanel = ({ authenticated }) => (
+const TopPanel = ({ authenticated, account_type }) => (
     <Header style={{display: 'flex', alignItems: 'center'}}>
         <StyledMenu>
             <Link to="/">
@@ -58,7 +58,7 @@ const TopPanel = ({ authenticated }) => (
                     width="50"
                 />
             </Link>
-            {process.env.REACT_APP_TYPE === 'supplier'
+            {account_type === 'supplier'
                 ? (authenticated && 
                     <React.Fragment>
                         <Link to="/">Orders</Link>
@@ -87,7 +87,7 @@ const TopPanel = ({ authenticated }) => (
 
         {authenticated
             ?  <React.Fragment>
-                    {process.env.REACT_APP_TYPE !== 'supplier' && <ShoppingCart />}
+                    {account_type !== 'supplier' && <ShoppingCart />}
                     <Dropdown overlay={SettingsMenu} trigger={['click']}>
                         <Button
                             icon="user"

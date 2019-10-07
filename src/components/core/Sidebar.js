@@ -33,7 +33,7 @@ const StyledMobileTopPanel = styled.div`
     box-sizing: border-box;
 `;
 
-const Sidebar = ({ authenticated }) => {
+const Sidebar = ({ authenticated, account_type }) => {
 
     const [collapsed, setCollapsed] = useState(true);
 
@@ -59,7 +59,7 @@ const Sidebar = ({ authenticated }) => {
                     height="100"
                     width="100"
                 />
-                {process.env.REACT_APP_TYPE === 'supplier'
+                {account_type === 'supplier'
                     ? <React.Fragment>
                         <Link to="/">Orders</Link>
                         <Link to="/inventory">Inventory</Link>

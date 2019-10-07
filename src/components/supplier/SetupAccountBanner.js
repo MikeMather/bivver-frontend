@@ -10,8 +10,8 @@ const Message = () => (
     </React.Fragment>
 );
 
-const SetupAccountBanner = () => (
-    process.env.REACT_APP_TYPE === 'supplier' && 
+const SetupAccountBanner = ({ account_type }) => (
+    account_type === 'supplier' && 
     <Alert message={<Message />} banner closable />
 );
 

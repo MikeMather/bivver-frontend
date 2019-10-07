@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Comment, Avatar, Form, Button, List, Input, Tag } from 'antd';
+import { StoreContext } from '../../context/store';
 import Image from '../common/Image';
 import moment from 'moment';
 import api from '../../utils/api';
@@ -30,6 +31,7 @@ const AddActivity = ({ orderId, refreshOrder }) => {
     
     const [value, setValue] = useState('');
     const [loading, setLoading] = useState(false);
+    const { state } = useContext(StoreContext);
 
     const addActivity = () => {
         if (value) {
@@ -38,7 +40,7 @@ const AddActivity = ({ orderId, refreshOrder }) => {
                 message: value,
                 order: orderId
             };
-            if (process.env.REACT_APP_TYPE === 'supplier') {
+            if (state.account_type === 'supplier') {
                 payload.supplier_seen = true;
             }
             else {

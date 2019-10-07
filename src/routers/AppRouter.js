@@ -95,14 +95,14 @@ const AppRouter = () => {
     return (
         <BrowserRouter>
             {!showTopPanel
-                ? <Sidebar authenticated={state.authenticated} /> 
-                : <TopPanel authenticated={state.authenticated} />
+                ? <Sidebar authenticated={state.authenticated} account_type={state.account_type} /> 
+                : <TopPanel authenticated={state.authenticated} account_type={state.account_type} />
             }
             {(!state.has_payment_account && state.authenticated) &&
-                <SetupAccountBanner />
+                <SetupAccountBanner account_type={state.account_type} />
             }
             <Container>
-                {process.env.REACT_APP_TYPE === 'supplier'
+                {state.account_type === 'supplier'
                     ? <SupplierRouter authenticated={state.authenticated} />
                     : <LocationRouter authenticated={state.authenticated} />
                 }

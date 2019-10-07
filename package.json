@@ -21,12 +21,12 @@
     "uuidv4": "^5.0.1"
   },
   "scripts": {
-    "start-supplier": "REACT_APP_TYPE=supplier react-app-rewired start",
-    "start-client": "REAT_APP_TYPE=client react-app-rewired start",
-    "build-supplier-staging": "NODE_ENV=staging REACT_APP_TYPE=supplier react-app-rewired build",
-    "build-client-staging": "NODE_ENV=staging REAT_APP_TYPE=client react-app-rewired build",
-    "build-supplier-production": "NODE_ENV=production REACT_APP_TYPE=supplier react-app-rewired build",
-    "build-client-production": "NODE_ENV=production REACT_APP_TYPE=supplier react-app-rewired build",
+    "start-supplier": "env-cmd -f envs/.env.supplier.local react-app-rewired start",
+    "start-client": "env-cmd -f envs/.env.client.local react-app-rewired start",
+    "build-supplier-staging": "env-cmd -f envs/.env.supplier.staging react-app-rewired build",
+    "build-client-staging": "env-cmd -f envs/.env.client.staging react-app-rewired build",
+    "build-supplier-production": "env-cmd -f envs/.env.supplier.production react-app-rewired build",
+    "build-client-production": "env-cmd -f envs/.env.client.production react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject"
   },
@@ -48,6 +48,7 @@
   "devDependencies": {
     "babel-plugin-import": "^1.12.2",
     "customize-cra": "^0.7.0",
+    "env-cmd": "^10.0.1",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "react-app-rewired": "^2.1.3"
