@@ -128,8 +128,15 @@ const SubmitOrderModal = ({ order, stripe, onCancel, refreshOrder }) => {
                 </FormField>
                 <FormField>
                     <div>
-                        I'm returning 
-                        <InputNumber style={{marginLeft: 10, marginRight: 10}} min={0} value={kegReturns} onChange={val => setKegReturns(val)} />
+                        I'm returning
+                        <Select onChange={val => setKegReturns(val)} style={{marginLeft: 10, marginRight: 10, width: 80}} defaultValue={kegReturns}>
+                            <Select.Option value="0">0</Select.Option>
+                            <Select.Option value="1">1</Select.Option>
+                            <Select.Option value="2">2</Select.Option>
+                            <Select.Option value="3">3</Select.Option>
+                            <Select.Option value="4">4</Select.Option>
+                            <Select.Option value="5">5</Select.Option>
+                        </Select>
                         kegs
                     </div>
                 </FormField>

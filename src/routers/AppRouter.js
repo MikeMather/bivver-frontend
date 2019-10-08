@@ -20,6 +20,7 @@ import SetupAccountBanner from '../components/supplier/SetupAccountBanner';
 import Settings from '../components/user/Settings';
 import StripeConnect from '../components/user/StripeConnect';
 import OrderHistory from '../components/order/OrderHistory';
+import NotFound from '../components/core/NotFound';
 
 const SupplierRouter = auth => (
     <Switch>
@@ -27,12 +28,12 @@ const SupplierRouter = auth => (
         {auth.authenticated
             ? <React.Fragment>
                 <Route exact path="/" component={OrdersDashboard} />
-                <Route exact path="/inventory" component={Items} />
-                <Route exact path="/settings" component={Settings} />
-                <Route exact path="/stripe-connect" component={StripeConnect} />
-                <Route exact path="/clients" component={() => <p>Clients</p>} />
-                <Route exact path="/orders/:orderId" component={ViewOrder} />
-                <Route exact path="/logout" component={() => <Logout {...auth} />} />
+                <Route path="/inventory" component={Items} />
+                <Route path="/settings" component={Settings} />
+                <Route path="/stripe-connect" component={StripeConnect} />
+                <Route path="/clients" component={() => <p>Clients</p>} />
+                <Route path="/orders/:orderId" component={ViewOrder} />
+                <Route path="/logout" component={() => <Logout {...auth} />} />
                 <Route path="/login" component={() => <Login {...auth} />} />
             </React.Fragment>
             : <React.Fragment>
@@ -47,21 +48,21 @@ const SupplierRouter = auth => (
 const LocationRouter = auth => (
     <Switch>
         <Route exact path="/(browse|)" component={() => <BrowseSuppliers {...auth} />} />
-        <Route exact path="/login" component={() => <Login {...auth} />} />
-        <Route exact path="/verify" component={() => <EmailVerify {...auth} />} />
+        <Route path="/login" component={() => <Login {...auth} />} />
+        <Route path="/verify" component={() => <EmailVerify {...auth} />} />
         <Route exact path="/suppliers/:supplierId" component={SupplierStore} />
-        <Route exact path="/suppliers/:supplierId/products/:itemId" component={ViewProduct} />
+        <Route path="/suppliers/:supplierId/products/:itemId" component={ViewProduct} />
         {auth.authenticated
             ? <React.Fragment>
                 <Route exact path="/orders" component={ClientOrders} />
-                <Route exact path="/settings" component={Settings} />
-                <Route exact path="/orders/:orderId" component={ViewOrder} />
-                <Route exact path="/order-history" component={OrderHistory} />
-                <Route exact path="/logout" component={() => <Logout {...auth} />} />
+                <Route path="/settings" component={Settings} />
+                <Route path="/orders/:orderId" component={ViewOrder} />
+                <Route path="/order-history" component={OrderHistory} />
+                <Route path="/logout" component={() => <Logout {...auth} />} />
             </React.Fragment>
             : <React.Fragment>
                 <Route exact path="/register" component={() => <RegisterClient {...auth} />} />
-                <Route exact path="/register/supplier" component={() => <RegisterSupplier {...auth} />} />
+                <Route path="/register/supplier" component={() => <RegisterSupplier {...auth} />} />
             </React.Fragment>
         }
     </Switch>

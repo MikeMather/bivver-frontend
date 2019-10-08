@@ -121,7 +121,7 @@ const Settings = () => {
                     >
                         <FormField>
                             <div>
-                                <Typography.Title level={4}>Card Payments</Typography.Title>
+                                <Typography.Title level={4}>Card Payments {!settings.has_payment_account && <Badge count={5} color="red" />}</Typography.Title>
                                 <Typography.Text type="secondary">
                                     Accept card payments for your orders deposited directly to your bank account by 
                                     connecting to our integrated payments platform
@@ -131,7 +131,7 @@ const Settings = () => {
                         </FormField>
                         <FormField>
                             <div>
-                                <Typography.Title level={4}>Keg Deposit Price</Typography.Title>
+                                <Typography.Title level={4}>Keg Deposit Price {!settings.supplier.keg_deposit_price && <Badge count={5} color="red" />}</Typography.Title>
                                 <Typography.Text type="secondary">Enter a value to include keg deposits on your invoices</Typography.Text>
                             </div>
                             <InputNumber
@@ -151,6 +151,7 @@ const Settings = () => {
                         <Select 
                             style={{width: 110}}
                             onChange={val => updateSettings({supplier: {...settings.supplier, default_payment_term: val}})}
+                            defaultValue={settings.supplier.default_payment_term}
                         >
                             <Select.Option value="0">0</Select.Option>
                             <Select.Option value="30">30</Select.Option>

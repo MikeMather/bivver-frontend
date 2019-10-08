@@ -18,7 +18,7 @@ const defaultItem = {
 
 const AddEditItem = ({ refreshItems, handleClose, form, item=defaultItem }) => {
 
-    const { getFieldDecorator, validateFields } = form;
+    const { getFieldDecorator, validateFields, setFieldsValue } = form;
     const [orderBy, setOrderBy] = useState(item.order_by || '')
     const [imageUrl, setImageUrl] = useState('');
     const [loading, setLoading] = useState(false);
@@ -50,6 +50,13 @@ const AddEditItem = ({ refreshItems, handleClose, form, item=defaultItem }) => {
     const handleImageChange = info => {
             getBase64(info.file.originFileObj, url => setImageUrl(url))
     }
+
+    const handleOrderByChange = value => {
+        setFieldsValue({
+            amount_per_unit: 30000
+        });
+        setOrderBy(value);
+    };
 
     const formItemLayout = {
         labelCol: {
@@ -86,7 +93,7 @@ const AddEditItem = ({ refreshItems, handleClose, form, item=defaultItem }) => {
                     <Form.Item label="Order by">
                         {getFieldDecorator('order_by', {
                             rules: [{required: true, message: 'Please select how your item will be ordered'}]
-                        })(<Select onChange={value => setOrderBy(value)}>
+                        })(<Select onChange={handleOrderByChange}>
                             <Select.Option key={0} value="Keg">Keg</Select.Option>
                             <Select.Option key={1} value="Case">Case</Select.Option>
                             <Select.Option key={2} value="Bottle">Bottle</Select.Option>
@@ -110,7 +117,7 @@ const AddEditItem = ({ refreshItems, handleClose, form, item=defaultItem }) => {
                             {getFieldDecorator('amount_per_unit', {
                                 rules: [{required: true, message: 'Please select a keg size'}]
                             })(<Select style={{width: 80}}>
-                                {KEG_SIZES.map(size => <Select.Option value={size}>{size}L</Select.Option>)}
+                                {KEG_SIZES.map(size => <Select.Option value={size*1000}>{size}L</Select.Option>)}
                             </Select>)}
                         </Form.Item>
                     }
