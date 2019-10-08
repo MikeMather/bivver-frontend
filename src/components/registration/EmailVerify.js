@@ -32,7 +32,7 @@ const EmailVerify = ({ authenticated }) => {
                     title={error || "You're all set!"}
                     subTitle={error ? 'There was a problem verifying your email' : `Thanks for verifying your email. ${authenticated ? '' : 'Click the button below to login'}`}
                     extra={[
-                        authenticated
+                        !authenticated
                         ? <Link to="/login"><Button type="primary">Go To Login</Button></Link>
                         : <Link to="/"><Button type="primary">Done</Button></Link>
                     ]}

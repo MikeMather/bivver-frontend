@@ -29,7 +29,7 @@ export const FormField = styled.div`
 
 export const SectionHeader = ({ title }) => <Title level={4} style={{marginBottom: '15px', marginTop: '20px'}}>{title}</Title>;
 
-const SubmitOrderModal = ({ order, stripe, onCancel }) => {
+const SubmitOrderModal = ({ order, stripe, onCancel, refreshOrder }) => {
 
     const [paymentMethod, setPaymentMethod] = useState(order.payment_method);
     const [activityMessage, setActivityMessage] = useState('');
@@ -63,16 +63,15 @@ const SubmitOrderModal = ({ order, stripe, onCancel }) => {
                     })
                     .catch(err => console.log(err));
                 }
+                actions.fetchAppState().then(() => {
+                    message.success('Order submitted');
+                    refreshOrder();
+                    onCancel();
+                });
             })
         })
         .catch(err => console.log(err))
-        .finally(() => {
-            setLoading(false);
-            actions.fetchAppState().then(() => {
-                message.success('Order submitted');
-                onCancel();
-            });
-        });
+        .finally(() => setLoading(false));
     };
 
     const createPayment = async () => {

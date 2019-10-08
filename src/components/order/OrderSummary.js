@@ -19,7 +19,7 @@ const StyledOrderSummary = styled.div`
     font-size: 18px;
 `;
 
-const OrderSummary = ({ order, showCheckout, updateParentSummary }) => {
+const OrderSummary = ({ order, showCheckout, updateParentSummary, refreshOrder }) => {
 
     const defaultSummary = {
         hst: 0,
@@ -53,7 +53,7 @@ const OrderSummary = ({ order, showCheckout, updateParentSummary }) => {
             {submitOrder && 
                 <StripeProvider apiKey={config.STRIPE_API_KEY}>
                     <Elements>
-                        <SubmitOrderModal order={order} onCancel={() => setSubmitOrder(false)} />
+                        <SubmitOrderModal order={order} onCancel={() => setSubmitOrder(false)} refreshOrder={refreshOrder} />
                     </Elements>
                 </StripeProvider>
             }

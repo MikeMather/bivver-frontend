@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import api from '../../utils/api';
-import { Breadcrumb, Descriptions, Tag, List, InputNumber, Button, Icon, Typography, Menu, Badge, Skeleton } from 'antd';
+import { Breadcrumb, Descriptions, Tag, List, Tabs, Icon, Menu, Badge } from 'antd';
 import StoreBanner from '../shop/StoreBanner';
 import moment from 'moment';
 import styled from 'styled-components';
 import ClientOrderActions from './ClientOrderActions';
 import { Link } from 'react-router-dom';
 import { ORDER_STATES } from '../../utils/constants';
-import { capitalize, getItemDescription, S3Image } from '../../utils/utils';
+import { capitalize } from '../../utils/utils';
 import Image from '../common/Image';
 import LabeledInput from '../common/LabeledInput';
 import LineItem from './LineItem';
@@ -33,10 +33,10 @@ const ViewOrder = ({ match, history }) => {
 
     const [order, setOrder] = useState(defaultOrder);
     const [loading, setLoading] = useState(false);
-    const [selectedTab, setSelectedTab] = useState('item-list');
     const { state, actions } = useContext(StoreContext);
     const [editing, setEditing] = useState(true);
     const [signatureUrl, setSignatureUrl] = useState('');
+    const [unseenActivities, setUnseenActivities] = useState(2);
 
     const tags = useMemo(() => {
         if (state.account_type === 'supplier') {
@@ -45,16 +45,16 @@ const ViewOrder = ({ match, history }) => {
         return ORDER_STATES.client
     }, [])
 
-    const unseenActivities = useMemo(() => {
-        return order.activities.reduce((total, activity) => {
+    const getUnseenActivities = () => {
+        setUnseenActivities(order.activities.reduce((total, activity) => {
             if (state.account_type === 'supplier') {
                 return total + !activity.supplier_seen;
             }
             return total + !activity.client_seen;
-        }, 0)
-    }, [order])
+        }, 0));
+    };
 
-    const fetchdata = () => {
+    const fetchData = () => {
         setLoading(true);
         api.orders.getOne(match.params.orderId)
             .then(res => {
@@ -72,14 +72,14 @@ const ViewOrder = ({ match, history }) => {
     const handleDeleteLineItem = id => {
         api.lineItems.delete(id)
             .then(() => {
-                fetchdata();
+                fetchData();
                 actions.fetchAppState();
             })
             .catch(err => console.log(err));
     };
 
     useEffect(() => {
-        fetchdata();
+        fetchData();
     }, [match.params.orderId, state]);
 
     useEffect(() => {
@@ -87,6 +87,7 @@ const ViewOrder = ({ match, history }) => {
             api.signatures.getOne(order.id)
                 .then(({ url }) => setSignatureUrl(url));
         }
+        getUnseenActivities();
     }, [order]);
 
     const links = () => (
@@ -142,40 +143,39 @@ const ViewOrder = ({ match, history }) => {
             </Descriptions>
             <StyledActionsContainer>
                 {state.account_type === 'supplier'
-                    ? <SupplierOrderActions order={order} type="primary" refreshOrder={fetchdata} />
-                    : <ClientOrderActions order={order} type="primary" refreshOrder={fetchdata} />
+                    ? <SupplierOrderActions order={order} type="primary" refreshOrder={fetchData} />
+                    : <ClientOrderActions order={order} type="primary" refreshOrder={fetchData} />
                 }
             </StyledActionsContainer>
-            <div style={{display: 'flex', width: '100%', marginTop: 50}}>
-                <Menu
-                    style={{flexBasis: '12%', marginRight: 25}}
-                    onClick={e => setSelectedTab(e.key)}
-                    defaultSelectedKeys={['item-list']}
-                    mode="inline"
-                >
-                    <Menu.Item key="item-list"><Icon type="shopping-cart" /> Order</Menu.Item>
-                    <Menu.Item key="messages"><Icon type="message" /> Messages <Badge count={unseenActivities} /></Menu.Item>
-                </Menu>
-                {selectedTab === 'item-list'
-                    ? <div style={{flexBasis: '88%', display: 'flex'}}>
-                        <List
-                            style={{flexBasis: '70%', marginRight: 15}}
-                            itemLayout="vertical"
-                            dataSource={order.line_items}
-                            loading={loading}
-                            renderItem={item => (
-                                <LineItem 
-                                    item={item} 
-                                    allowEdit={editing} 
-                                    handleDeleteLineItem={handleDeleteLineItem} 
-                                    refreshOrder={fetchdata} 
-                                />
-                            )}
+            <div style={{display: 'flex', width: '100%', marginTop: 50, marginBottom: 50}}>
+                <Tabs defaultActiveKey="1" style={{width: '100%'}}>
+                    <Tabs.TabPane tab={<span><Icon type="shopping-cart" /> Order</span>} key="1">
+                        <div style={{flexBasis: '88%', display: 'flex'}}>
+                            <List
+                                style={{flexBasis: '70%', marginRight: 15}}
+                                itemLayout="vertical"
+                                dataSource={order.line_items}
+                                loading={loading}
+                                renderItem={item => (
+                                    <LineItem 
+                                        item={item} 
+                                        allowEdit={editing} 
+                                        handleDeleteLineItem={handleDeleteLineItem} 
+                                        refreshOrder={fetchData} 
+                                    />
+                                )}
+                            />
+                            <OrderSummary order={order} showCheckout={editing} refreshOrder={fetchData} />
+                        </div>
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab={<span><Icon type="message" /> Messages <Badge count={unseenActivities} /></span>} key="2">
+                        <OrderActivities 
+                            order={order} 
+                            refreshOrder={fetchData} 
+                            clearUnseenActivities={() => setUnseenActivities(0)} 
                         />
-                        <OrderSummary order={order} showCheckout={editing} />
-                    </div>
-                    : <OrderActivities order={order} refreshOrder={fetchdata} />
-                }
+                    </Tabs.TabPane>
+                </Tabs>
             </div>
         </div>
     );

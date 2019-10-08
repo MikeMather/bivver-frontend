@@ -76,10 +76,11 @@ const AddActivity = ({ orderId, refreshOrder }) => {
 };
 
 
-const OrderActivities = ({ refreshOrder, order }) => {
+const OrderActivities = ({ refreshOrder, order, clearUnseenActivities }) => {
 
     useEffect(() => {
         api.markActivitiesSeen.create({order: order.id});
+        clearUnseenActivities();
     }, [])
 
     return (

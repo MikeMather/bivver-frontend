@@ -83,10 +83,9 @@ const SupplierOrderActions = ({ order, type, refreshOrder }) => {
                 Request revision
             </Menu.Item>
             <Menu.SubMenu title="Mark as paid" key="3" disabled={disablePayment}>
-                <Menu.Item onClick={() => markAsPaid('card')} disabled={order.payment_method !== 'card'}><Icon type="credit-card" /> Credit Card</Menu.Item>
-                <Menu.Item onClick={() => markAsPaid('e-transfer')}><Icon type="mail" /> E-transfer</Menu.Item>
-                <Menu.Item onClick={() => markAsPaid('cheque')}><Icon type="bank" /> Cheque</Menu.Item>
-                <Menu.Item onClick={() => markAsPaid('cash')}><Icon type="dollar" /> Cash</Menu.Item>
+                <Menu.Item key="0" onClick={() => markAsPaid('e-transfer')}><Icon type="mail" /> E-transfer</Menu.Item>
+                <Menu.Item key="1" onClick={() => markAsPaid('cheque')}><Icon type="bank" /> Cheque</Menu.Item>
+                <Menu.Item key="2" onClick={() => markAsPaid('cash')}><Icon type="dollar" /> Cash</Menu.Item>
             </Menu.SubMenu>
             <Menu.Item key="4" disabled={disableDelivery} onClick={() => setShowDeliveryModal(true)}>
                 <Icon type="carry-out"/>
