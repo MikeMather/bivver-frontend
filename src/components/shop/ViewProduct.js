@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../utils/api';
-import { Empty, Breadcrumb, Button, Typography, Icon, Descriptions, Tag, Badge, message } from 'antd';
+import { Empty, Breadcrumb, Button, Typography, Descriptions, Tag, Badge } from 'antd';
 import { Link } from 'react-router-dom';
-import { StyledBanner } from './StoreBanner';
-import { S3Image } from '../../utils/utils';
+import { StyledBanner } from './Header';
 import moment from 'moment';
 import styled from 'styled-components';
 import AddToCartButton from './AddToCartButton';

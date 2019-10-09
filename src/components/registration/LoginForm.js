@@ -50,9 +50,13 @@ const LoginForm = ({ form, history, asModal, callback=null }) => {
         })
     };
 
+    const cardStyle = {
+        padding: window.innerWidth > 450 ? 55 : 0
+    };
+
     return (
         <LoginFormWrapper>
-            <Card style={{padding: '55px'}}>
+            <Card style={cardStyle}>
                 <ImageWrapper>
                     <img 
                         src="/images/logo.png"

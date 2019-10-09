@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Typography, Select, Icon, Button } from 'antd';
 import { CountryRegionData } from 'react-country-region-selector';
 
-const StyledBanner = styled.div`
+const HeroContainer = styled.div`
     width: 100%;
     border-radius: 3px;
     position: relative;
@@ -26,7 +26,7 @@ const StyledBanner = styled.div`
     }
 `;
 
-const Banner = ({ handleSelectRegion, region }) => {
+const SelectProvinceHero = ({ handleSelectRegion, region }) => {
     // Why tf do they store the data like this?
     const [provinces, setProvinces] = useState([]);
 
@@ -35,7 +35,7 @@ const Banner = ({ handleSelectRegion, region }) => {
     }, [CountryRegionData])
 
     return (
-        <StyledBanner>
+        <HeroContainer>
             <Typography.Title>Explore your local craft product suppliers</Typography.Title>
             <span style={{display: 'flex', justifyContent: 'center', alignItems: 'baseline', flexWrap: 'wrap'}}>
                 <p>I'm looking for suppliers in </p>
@@ -51,8 +51,8 @@ const Banner = ({ handleSelectRegion, region }) => {
                     <Button type="link" onClick={() => handleSelectRegion(null)}><Icon type="close-circle" style={{color: 'white'}}/></Button>
                 }
             </span>
-        </StyledBanner>
+        </HeroContainer>
     );
 };
 
-export default Banner;
+export default SelectProvinceHero;

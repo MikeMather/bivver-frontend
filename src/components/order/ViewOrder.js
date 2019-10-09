@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import api from '../../utils/api';
-import { Breadcrumb, Descriptions, Tag, List, Tabs, Icon, Menu, Badge } from 'antd';
-import StoreBanner from '../shop/StoreBanner';
+import { Breadcrumb, Descriptions, Tag, List, Tabs, Icon, Badge, Button } from 'antd';
+import ClientHeader from '../shop/ClientHeader';
+import SupplierHeader from '../shop/SupplierHeader';
 import moment from 'moment';
 import styled from 'styled-components';
 import ClientOrderActions from './ClientOrderActions';
@@ -9,7 +10,6 @@ import { Link } from 'react-router-dom';
 import { ORDER_STATES } from '../../utils/constants';
 import { capitalize } from '../../utils/utils';
 import Image from '../common/Image';
-import LabeledInput from '../common/LabeledInput';
 import LineItem from './LineItem';
 import OrderSummary from './OrderSummary';
 import { StoreContext } from '../../context/store';
@@ -19,6 +19,16 @@ import SupplierOrderActions from './SupplierOrderActions';
 const StyledActionsContainer = styled.div`
     display: flex;
     justify-content: flex-end;
+`;
+
+const StyledOrderContainer = styled.div`
+    flex-basis: 88%;
+    display: flex;
+    flex-wrap: wrap;
+
+    @media screen and (max-width: 768px) {
+        flex-basis: 100%;
+    }
 `;
 
 const defaultOrder = {
@@ -109,11 +119,20 @@ const ViewOrder = ({ match, history }) => {
         </Breadcrumb>
     );
 
+    const storeLink = () => <Link to={`/suppliers/${order.supplier.id}`}><Button type="primary">View Store</Button></Link>
+
     return (
         <div>
             {state.account_type === 'supplier'
-                ? <StoreBanner {...order.client} Breadcrumbs={links} />
-                : <StoreBanner {...order.supplier} Breadcrumbs={links} />
+                ? <ClientHeader 
+                    {...order.client} 
+                    Breadcrumbs={links}
+                />
+                : <SupplierHeader 
+                    {...order.supplier} 
+                    Breadcrumbs={links}
+                    Extra={storeLink} 
+                />
             }
             <Descriptions bordered style={{marginBottom: 30}}>
                 {order.submitted_at && <Descriptions.Item label="Submitted">{moment(order.submitted_at).format('LLL')}</Descriptions.Item>}
@@ -150,7 +169,7 @@ const ViewOrder = ({ match, history }) => {
             <div style={{display: 'flex', width: '100%', marginTop: 50, marginBottom: 50}}>
                 <Tabs defaultActiveKey="1" style={{width: '100%'}}>
                     <Tabs.TabPane tab={<span><Icon type="shopping-cart" /> Order</span>} key="1">
-                        <div style={{flexBasis: '88%', display: 'flex'}}>
+                        <StyledOrderContainer>
                             <List
                                 style={{flexBasis: '70%', marginRight: 15}}
                                 itemLayout="vertical"
@@ -166,7 +185,7 @@ const ViewOrder = ({ match, history }) => {
                                 )}
                             />
                             <OrderSummary order={order} showCheckout={editing} refreshOrder={fetchData} />
-                        </div>
+                        </StyledOrderContainer>
                     </Tabs.TabPane>
                     <Tabs.TabPane tab={<span><Icon type="message" /> Messages <Badge count={unseenActivities} /></span>} key="2">
                         <OrderActivities 

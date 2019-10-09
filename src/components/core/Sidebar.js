@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Menu, Button, Icon, Layout } from 'antd';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import ShoppingCart from './ShoppingCart';
+import { StoreContext } from '../../context/store';
 
 const StyledSidebar = styled.div`
     position: absolute;
@@ -36,6 +37,7 @@ const StyledMobileTopPanel = styled.div`
 const Sidebar = ({ authenticated, account_type }) => {
 
     const [collapsed, setCollapsed] = useState(true);
+    const { state } = useContext(StoreContext);
 
     return (
         <div>
@@ -48,7 +50,7 @@ const Sidebar = ({ authenticated, account_type }) => {
                     height="30"
                     width="30"
                 />
-                <ShoppingCart color="#1890ff" />
+                {state.client && <ShoppingCart color="#1890ff" />}
             </StyledMobileTopPanel>
             <StyledSidebar style={{display: collapsed ? 'none': 'flex'}} onClick={() => setCollapsed(true)}>
                 <Button onClick={() => setCollapsed(true)} style={{position: 'absolute', right: 10, top: 10}}>

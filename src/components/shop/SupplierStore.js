@@ -1,9 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useMemo } from 'react';
 import { StoreContext } from '../../context/store';
 import { withRouter } from 'react-router-dom';
-import { Spin } from 'antd';
+import { Breadcrumb, Button } from 'antd';
+import { Link } from 'react-router-dom';
 import api from '../../utils/api';
-import StoreBanner from './StoreBanner';
+import SupplierHeader from './SupplierHeader';
 import { formatStoreProducts } from './helper';
 import ItemList from './ItemList';
 import Product from './Product';
@@ -14,6 +15,9 @@ const SupplierStore = ({ match }) => {
     const [supplier, setSupplier] = useState({});
     const [items, setItems] = useState({Kegs: [], Cases: [], Bottles: []});
     const [loading, setLoading] = useState(false);
+    const activeOrder = useMemo(() => {
+        return state.client.active_orders.find(order => order.supplier.id === supplier.id) || {};
+    }, [supplier, state]);
 
     const fetchData = () => {
         if (match.params.supplierId) {
@@ -32,9 +36,28 @@ const SupplierStore = ({ match }) => {
         fetchData();
     }, [])
 
+    const links = () => (
+        <Breadcrumb>
+            <Breadcrumb.Item>
+                <Link to={`/?${state.region}`}>Suppliers</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>{supplier.name}</Breadcrumb.Item>
+        </Breadcrumb>
+    );
+
+    const checkoutButton = () => (
+        <Link to={`/orders/${activeOrder.id}`}>
+            <Button type="primary" disabled={!activeOrder.id}>Checkout</Button>
+        </Link>
+    );
+
     return (
         <React.Fragment>
-            <StoreBanner {...supplier} />
+            <SupplierHeader 
+                {...supplier} 
+                Breadcrumbs={links} 
+                Extra={checkoutButton}
+            />
             {Object.keys(items).map(key => (
                 items[key].length
                 ? <ItemList title={key}>

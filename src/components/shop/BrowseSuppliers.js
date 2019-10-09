@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { StoreContext } from '../../context/store';
-import Banner from './Banner';
+import SelectProvinceHero from './SelectProvinceHero';
 import PopularProducts from './PopularProducts';
 import SupplierList from './SupplierList';
 import queryString from 'query-string';
@@ -23,7 +23,7 @@ const BrowseSuppliers = ({ history }) => {
 
     return (
         <React.Fragment>
-            <Banner 
+            <SelectProvinceHero 
                 region={searchRegion}
                 handleSelectRegion={val => {
                     val ? history.push(`/?region=${val}`) : history.push(`/`);

@@ -17,6 +17,11 @@ const SummaryField = styled.div`
 const StyledOrderSummary = styled.div`
     flex-basis: 30%;
     font-size: 18px;
+
+    @media screen and (max-width: 768px) {
+        flex-basis: 100%;
+        margin-top: 30px;
+    }
 `;
 
 const OrderSummary = ({ order, showCheckout, updateParentSummary, refreshOrder }) => {

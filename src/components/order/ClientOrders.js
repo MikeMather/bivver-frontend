@@ -13,6 +13,10 @@ import moment from 'moment';
 const OrderContainer = styled.div`
     max-width: 80%;
     margin: 0 auto;
+
+    @media screen and (max-width: 768px) {
+        max-width: 100%;
+    }
 `;
 
 const FilterMenu = ({ onChange, selected }) => {

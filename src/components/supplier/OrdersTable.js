@@ -12,6 +12,8 @@ const { Column } = Table;
 
 const StyledTableWrapper = styled.div`
     margin-top: 40px;
+    max-width: 100%;
+    overflow-x: auto;
 `;
 
 const OrdersTable = ({ orders, refreshOrders }) => {

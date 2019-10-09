@@ -23,6 +23,10 @@ const StyledItemLayout = styled.div`
     .list-item:first-of-type {
         margin-left: 0;
     }
+
+    @media screen and (max-width: 450px) {
+        justify-content: center;
+    }
 `;
 
 const ItemList = ({ children, title }) => (
