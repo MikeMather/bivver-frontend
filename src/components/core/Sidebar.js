@@ -65,7 +65,6 @@ const Sidebar = ({ authenticated, account_type }) => {
                     ? <React.Fragment>
                         <Link to="/">Orders</Link>
                         <Link to="/inventory">Inventory</Link>
-                        <Link to="/clients">Clients</Link>
                         <Link to="/clients">Settings</Link>
                         <Link to="/logout">Logout</Link>
                     </React.Fragment>

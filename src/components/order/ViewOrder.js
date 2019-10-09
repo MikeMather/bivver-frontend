@@ -22,12 +22,11 @@ const StyledActionsContainer = styled.div`
 `;
 
 const StyledOrderContainer = styled.div`
-    flex-basis: 88%;
     display: flex;
-    flex-wrap: wrap;
 
     @media screen and (max-width: 768px) {
         flex-basis: 100%;
+        flex-wrap: wrap;
     }
 `;
 
