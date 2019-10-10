@@ -33,8 +33,8 @@ const SubmitOrderModal = ({ order, stripe, onCancel, refreshOrder }) => {
 
     const [paymentMethod, setPaymentMethod] = useState(order.payment_method);
     const [activityMessage, setActivityMessage] = useState('');
-    const [deferred, setDeffered] = useState(order.payment_deferred);
-    const [paymentSent, setPaymentSent] = useState(order.payment_deferred);
+    const [deferred, setDeffered] = useState(!!order.payment_deferred);
+    const [paymentSent, setPaymentSent] = useState(!!order.payment_deferred);
     const [kegReturns, setKegReturns] = useState(order.keg_returns);
     const [loading, setLoading] = useState(false);
     const [orderSummary, setOrderSummary] = useState({});
@@ -83,10 +83,12 @@ const SubmitOrderModal = ({ order, stripe, onCancel, refreshOrder }) => {
             payment_method: paymentMethod,
             deferred: paymentMethod === 'card' ? deferred : !paymentSent
         };
+        console.log(payload);
         if (!state.has_payment_account && paymentMethod === 'card' && !deferred) {
             const { token } = await stripe.createToken();
             payload.token = token.id;
         }
+        console.log(payload);
         return api.payments.create(payload);
     };
 
