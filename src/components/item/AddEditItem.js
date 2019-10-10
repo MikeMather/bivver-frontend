@@ -153,7 +153,7 @@ const AddEditItem = ({ refreshItems, handleClose, form, item=defaultItem }) => {
                     </Form.Item>
                     <Form.Item label="Image">
                         {getFieldDecorator('image', {
-                            rules: [{required: true, message: 'Please provide an image of your product'}]
+                            rules: [{required: false, message: 'Please provide an image of your product'}]
                         })(
                             <Upload.Dragger name="image"  multiple={false} onChange={handleImageChange}>
                                 {item.image || imageUrl 
