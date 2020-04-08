@@ -97,7 +97,7 @@ const SupplierOrderActions = ({ order, type, refreshOrder }) => {
                 onClick={downloadInvoice}
             >
                 <Icon type="file-pdf" />
-                Download PDF
+                Download Invoice
             </Menu.Item>
         </Menu>
     );

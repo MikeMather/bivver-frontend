@@ -46,7 +46,7 @@ const AddToCartButton = ({ item }) => {
             }
             {existsInCart
                 ? <Tooltip title="Already added to your current order">
-                    <Alert message="Added to order" type="success" showIcon style={{fontSize: 12}} />
+                    <Alert message="Added to order" type="success" showIcon style={{fontSize: 12, paddingRight: 10, paddingLeft: 35}} />
                 </Tooltip>
                 : <Button loading={loading} type="primary" onClick={addToCart}>Add to Cart</Button>
             }

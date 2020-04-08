@@ -41,17 +41,18 @@ const LineItem = ({ item, refreshOrder, handleDeleteLineItem, allowEdit }) => {
 
     return (
         <List.Item
-            actions={[
-                <Link to={`/suppliers/${item.item.supplier}/products/${item.item.id}`}>View</Link>,
-                allowEdit
-                    ? <Popconfirm
+            actions={allowEdit
+                ? [
+                    <Link to={`/suppliers/${item.item.supplier}/products/${item.item.id}`}>View</Link>,
+                    <Popconfirm
                         title="Are you want to remove this item from your order?"
                         onConfirm={() => handleDeleteLineItem(item.id)}
                     >
                         <Button type="link" style={{padding: 0}}>Remove from order</Button>
                     </Popconfirm>
-                    : <React.Fragment />
-            ]}
+                ]
+                : []
+            }
             extra={
                 <ExtraContainer>
                     <p>${parseFloat(item.price).toFixed(2)}</p>
